@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MD_EPI_Ingenico", "MD_EPI_Ingenico\MD_EPI_Ingenico.csproj", "{2045FCC9-165C-4CE7-924D-3E0568B402A9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2045FCC9-165C-4CE7-924D-3E0568B402A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2045FCC9-165C-4CE7-924D-3E0568B402A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2045FCC9-165C-4CE7-924D-3E0568B402A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2045FCC9-165C-4CE7-924D-3E0568B402A9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {81E00F83-8A70-486A-848B-12C6C5EDC440}
+	EndGlobalSection
+EndGlobal
