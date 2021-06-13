@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MD_EPI_Ingenico", "MD_EPI_Ingenico\MD_EPI_Ingenico.csproj", "{2045FCC9-165C-4CE7-924D-3E0568B402A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTests", "ConsoleTests\ConsoleTests.csproj", "{57409713-7D95-40A6-BF48-74E27B1E727F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2045FCC9-165C-4CE7-924D-3E0568B402A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2045FCC9-165C-4CE7-924D-3E0568B402A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2045FCC9-165C-4CE7-924D-3E0568B402A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57409713-7D95-40A6-BF48-74E27B1E727F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57409713-7D95-40A6-BF48-74E27B1E727F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57409713-7D95-40A6-BF48-74E27B1E727F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57409713-7D95-40A6-BF48-74E27B1E727F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

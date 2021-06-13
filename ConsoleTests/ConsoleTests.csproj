@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2045FCC9-165C-4CE7-924D-3E0568B402A9}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MD_EPI_Ingenico</RootNamespace>
-    <AssemblyName>MD_EPI_Ingenico</AssemblyName>
+    <ProjectGuid>{57409713-7D95-40A6-BF48-74E27B1E727F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ConsoleTests</RootNamespace>
+    <AssemblyName>ConsoleTests</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,14 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SkiData.ElectronicPaymentInterface, Version=5.4.0.0, Culture=neutral, PublicKeyToken=d49c6c683ad30fe9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files (x86)\SKIDATA\SKIDATA Electronic Payment SDK V5.4\Lib\SkiData.ElectronicPaymentInterface.dll</HintPath>
-    </Reference>
-    <Reference Include="SkiData.Parking.ElectronicPayment.Extensions, Version=24.1.0.1, Culture=neutral, PublicKeyToken=77b7d1dfd1837f64, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files (x86)\SKIDATA\SKIDATA Electronic Payment SDK V5.4\Lib\SkiData.Parking.ElectronicPayment.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,13 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CountTransaction.cs" />
-    <Compile Include="EPI_Cashdesk.cs" />
-    <Compile Include="IngenicoLib.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLConnect.cs" />
-    <Compile Include="StringValue.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
