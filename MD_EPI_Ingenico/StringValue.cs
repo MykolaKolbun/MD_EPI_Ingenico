@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MD_EPI_Ingenico
+﻿namespace MD_EPI_Ingenico
 {
     class StringValue
     {

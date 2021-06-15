@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MD_EPI_Ingenico
 {
@@ -14,8 +11,8 @@ namespace MD_EPI_Ingenico
 
         public Logger(string fileName, string machineID)
         {
-            this.File = fileName;
-            this.Path = $@"{StringValue.WorkingDirectory}Log\{File}Trace-{machineID} {DateTime.Now:yyyy-MM-dd}.txt";
+            File = fileName;
+            Path = $@"{StringValue.WorkingDirectory}Log\{File}Trace-{machineID} {DateTime.Now:yyyy-MM-dd}.txt";
 
         }
 

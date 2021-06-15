@@ -1,13 +1,10 @@
 ﻿using SkiData.ElectronicPayment;
 using SkiData.Parking.ElectronicPayment.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MD_EPI_Ingenico
 {
@@ -25,31 +22,32 @@ namespace MD_EPI_Ingenico
         public TransactionResult lastTransaction;
         public TransactionData transactionDataContainer;
         private const byte merchID = 1;
-        private string _userId = String.Empty;
-        private string _userName = String.Empty;
-        private string _shiftId = String.Empty;
+        private string _userId = string.Empty;
+        private string _userName = string.Empty;
+        private string _shiftId = string.Empty;
         private bool isTerminalReady = true;
         private bool _activated = false;
         private bool _inTransaction = false;
         bool transactionCanceled = false;
-        string terminalID = String.Empty;
+        string terminalID = string.Empty;
         IngenicoLib reader;
         #endregion
 
         #region Constructor
         public EPI_Cashdesk()
         {
-            this._settings.AllowsCancel = false;
-            this._settings.AllowsCredit = false;
-            this._settings.AllowsRepeatReceipt = false;
-            this._settings.AllowsValidateCard = true;
-            this._settings.AllowsVoid = true;
-            this._settings.CanSetCardData = true;
-            this._settings.HasCardReader = true;
-            this._settings.IsContactless = false;
-            this._settings.MayPrintReceiptOnRejection = false;
-            this._settings.NeedsSkidataChipReader = false;
-            this._settings.RequireReceiptPrinter = false;
+            _settings.AllowsCancel = false;
+            _settings.AllowsCredit = true;
+            _settings.AllowsRepeatReceipt = false;
+            _settings.AllowsValidateCard = true;
+            _settings.AllowsVoid = true;
+            _settings.CanSetCardData = true;
+            _settings.HasCardReader = true;
+            _settings.IsContactless = false;
+            _settings.MayPrintReceiptOnRejection = false;
+            _settings.NeedsSkidataChipReader = false;
+            _settings.RequireReceiptPrinter = false;
+            _settings.PaymentCardMayDifferFromAccessCard = true;
         }
         #endregion
 
@@ -62,7 +60,7 @@ namespace MD_EPI_Ingenico
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -72,7 +70,7 @@ namespace MD_EPI_Ingenico
         /// <param name="disposing">if set to <see langword="true"/> the managed resources will be disposed.</param>
         private void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
@@ -80,7 +78,7 @@ namespace MD_EPI_Ingenico
                     //    _controlDialog.CloseForm();
                 }
             }
-            this.disposed = true;
+            disposed = true;
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace MD_EPI_Ingenico
         /// </summary>
         ~EPI_Cashdesk()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
         #endregion
 
@@ -102,12 +100,12 @@ namespace MD_EPI_Ingenico
 
         public Settings Settings
         {
-            get { return this.TerminalSettings; }
+            get { return TerminalSettings; }
         }
 
         private Settings TerminalSettings
         {
-            get { return this._settings; }
+            get { return _settings; }
         }
 
         public bool BeginInstall(TerminalConfiguration configuration)
@@ -115,24 +113,31 @@ namespace MD_EPI_Ingenico
             _termConfig = configuration;
             bool done = false;
             reader = new IngenicoLib();
-            this.deviceType = configuration.DeviceType;
-            this.deviceID = configuration.DeviceId;
+            deviceType = configuration.DeviceType;
+            deviceID = configuration.DeviceId;
             terminalID = configuration.CommunicationChannel;
-            CreateFolders();
-            Logger log = new Logger(this.ShortName, this.deviceID);
-            log.Write("Begin Install");
-            int error = reader.Init();
-            log.Write($"Begin Install: Init result: {error}");
-            if (error == 0)
+            try
             {
-                done = true;
+                CreateFolders();
+                Logger log = new Logger(ShortName, deviceID);
+                log.Write("Begin Install");
+                int error = reader.Init();
+                log.Write($"Begin Install: Init result: {error}");
+                if (error == 0)
+                {
+                    done = true;
+                }
+            }catch(Exception e)
+            {
+                Logger log = new Logger(ShortName, deviceID);
+                log.Write($"Begin Install exception {e.Message}");
             }
             return done;
         }
 
         public void EndInstall()
         {
-            Logger log = new Logger(this.ShortName, this.deviceID);
+            Logger log = new Logger(ShortName, deviceID);
             isTerminalReady = true;
             log.Write("EndInstall()");
         }
@@ -180,19 +185,19 @@ namespace MD_EPI_Ingenico
 
         public void AllowCards(CardIssuerCollection issuers)
         {
-            
+
         }
 
         public bool IsTerminalReady()
         {
-            Logger log = new Logger(this.ShortName, this.deviceID);
+            Logger log = new Logger(ShortName, deviceID);
             log.Write($"IsTerminalReady({isTerminalReady.ToString()})");
             return isTerminalReady;
         }
 
         public void Cancel()
         {
-            
+
         }
 
         public TransactionResult Credit(TransactionData creditData)
@@ -212,7 +217,7 @@ namespace MD_EPI_Ingenico
             transactionDataContainer = debitData;
             bool transactionResultDone = false;
             lastTransaction = new TransactionFailedResult(TransactionType.Debit, DateTime.Now);
-            Logger log = new Logger(this.ShortName, this.deviceID);
+            Logger log = new Logger(ShortName, deviceID);
             log.Write($"Debit(Amount: {debitData.Amount}, RefID: {debitData.ReferenceId})");
             SQLConnect sql = new SQLConnect();
             Card card = Card.NoCard;
@@ -223,7 +228,6 @@ namespace MD_EPI_Ingenico
                     try
                     {
                         int error = reader.Purchase((int)(debitData.Amount * 100));
-                        int temp = 0;
                         if (error == 0)
                         {
                             transactionResultDone = true;
@@ -244,41 +248,48 @@ namespace MD_EPI_Ingenico
                     {
                         log.Write("Finaly");
                         log.Write($"Transaction Done: {transactionResultDone}");
+                        byte[] cardType = new byte[20];
+                        Array.Copy(reader.outStructure.cardType, cardType, cardType.Length);
                         if (transactionResultDone)
                         {
                             if (debitData is ParkingTransactionData parkingTransactionData)
                             {
-                                card = new CreditCard(Encoding.Default.GetString(reader.outStructure.pan), Encoding.Default.GetString(reader.outStructure.expiry), new CardIssuer(Encoding.Default.GetString(reader.outStructure.cardType)));
+                                card = new CreditCard(Encoding.Default.GetString(reader.outStructure.pan), Encoding.Default.GetString(reader.outStructure.expiry), new CardIssuer(Encoding.Default.GetString(cardType)));
                                 log.Write($"Finaly RefID:{parkingTransactionData.ReferenceId}, Ticket: {parkingTransactionData.TicketId}, Amount: {(int)parkingTransactionData.Amount}, CardNR(PAN): {card.Number} \nReceipt: \n{reader.GetReceipt()}");
-                                sql.AddLinePurch(this.deviceID, parkingTransactionData.ReferenceId, parkingTransactionData.TicketId, reader.GetReceipt(), (int)parkingTransactionData.Amount, card.Number);
-                                TransactionDoneResult doneResult = new TransactionDoneResult(TransactionType.Debit, DateTime.Now);
-                                doneResult.ReceiptPrintoutMandatory = false;
-                                doneResult.Receipts = new Receipts(new Receipt(reader.GetReceipt()), new Receipt(reader.GetReceipt()));
-                                doneResult.Amount = (int)parkingTransactionData.Amount;
-                                doneResult.Card = card;
-                                doneResult.AuthorizationNumber = Encoding.Default.GetString(reader.outStructure.authCode);
-                                doneResult.TransactionNumber = Encoding.Default.GetString(reader.outStructure.rrn);
-                                doneResult.CustomerDisplayText = Encoding.Default.GetString(reader.outStructure.text_message); ;
+                                sql.AddLinePurch(deviceID, parkingTransactionData.ReferenceId, parkingTransactionData.TicketId, reader.GetReceipt(), (int)parkingTransactionData.Amount, card.Number);
+                                TransactionDoneResult doneResult = new TransactionDoneResult(TransactionType.Debit, DateTime.Now)
+                                {
+                                    ReceiptPrintoutMandatory = false,
+                                    Receipts = new Receipts(new Receipt(reader.GetReceipt()), new Receipt(reader.GetReceipt())),
+                                    Amount = (int)parkingTransactionData.Amount,
+                                    Card = card,
+                                    AuthorizationNumber = Encoding.Default.GetString(reader.outStructure.authCode),
+                                    TransactionNumber = Encoding.Default.GetString(reader.outStructure.rrn),
+                                    CustomerDisplayText = Encoding.Default.GetString(reader.outStructure.text_message)
+                                };
+                                ;
                                 lastTransaction = doneResult;
                                 OnAction(new ActionEventArgs(lastTransaction.CustomerDisplayText, ActionType.DisplayCustomerMessage));
                             }
                             else
                             {
-                                card = new CreditCard(Encoding.Default.GetString(reader.outStructure.pan), Encoding.Default.GetString(reader.outStructure.expiry), new CardIssuer(Encoding.Default.GetString(reader.outStructure.cardType)));
+                                card = new CreditCard(Encoding.Default.GetString(reader.outStructure.pan), Encoding.Default.GetString(reader.outStructure.expiry), new CardIssuer(Encoding.Default.GetString(cardType)));
                                 log.Write($"Finaly RefID:{debitData.ReferenceId}, Amount: {(int)debitData.Amount}, CardNR(PAN): {card.Number} \n\tReceipt: \n\t{reader.GetReceipt()}");
-                                sql.AddLinePurch(this.deviceID, debitData.ReferenceId, "", reader.GetReceipt(), (int)debitData.Amount, card.Number);
-                                TransactionDoneResult doneResult = new TransactionDoneResult(TransactionType.Debit, DateTime.Now);
-                                doneResult.ReceiptPrintoutMandatory = false;
-                                doneResult.Receipts = new Receipts(new Receipt(reader.GetReceipt()), new Receipt(reader.GetReceipt()));
-                                doneResult.Amount = (int)debitData.Amount;
-                                doneResult.Card = card;
-                                doneResult.AuthorizationNumber = Encoding.Default.GetString(reader.outStructure.authCode);
-                                doneResult.TransactionNumber = Encoding.Default.GetString(reader.outStructure.rrn);
-                                doneResult.CustomerDisplayText = Encoding.Default.GetString(reader.outStructure.text_message);
+                                sql.AddLinePurch(deviceID, debitData.ReferenceId, "", reader.GetReceipt(), (int)debitData.Amount, card.Number);
+                                TransactionDoneResult doneResult = new TransactionDoneResult(TransactionType.Debit, DateTime.Now)
+                                {
+                                    ReceiptPrintoutMandatory = false,
+                                    Receipts = new Receipts(new Receipt(reader.GetReceipt()), new Receipt(reader.GetReceipt())),
+                                    Amount = (int)debitData.Amount,
+                                    Card = card,
+                                    AuthorizationNumber = Encoding.Default.GetString(reader.outStructure.authCode),
+                                    TransactionNumber = Encoding.Default.GetString(reader.outStructure.rrn),
+                                    CustomerDisplayText = Encoding.Default.GetString(reader.outStructure.text_message)
+                                };
                                 lastTransaction = doneResult;
                                 OnAction(new ActionEventArgs(lastTransaction.CustomerDisplayText, ActionType.DisplayCustomerMessage));
                             }
-                            CountTransaction counter = new CountTransaction(this.deviceID);
+                            CountTransaction counter = new CountTransaction(deviceID);
                             int tr = counter.Get();
                             if (tr < 5)
                             {
@@ -292,9 +303,11 @@ namespace MD_EPI_Ingenico
                         else
                         {
                             log.Write($"Finaly RefID:{debitData.ReferenceId}, \nReceipt: \n{reader.GetReceipt()}, \nAmount: {(int)debitData.Amount} ");
-                            lastTransaction = new TransactionFailedResult(TransactionType.Debit, DateTime.Now);
-                            lastTransaction.CustomerDisplayText = String.IsNullOrEmpty(Encoding.Default.GetString(reader.outStructure.text_message)) ? Encoding.Default.GetString(reader.outStructure.text_message) : "Ошибка!";
-                            lastTransaction.Receipts = new Receipts(new Receipt(reader.GetReceipt()));
+                            lastTransaction = new TransactionFailedResult(TransactionType.Debit, DateTime.Now)
+                            {
+                                CustomerDisplayText = string.IsNullOrEmpty(Encoding.Default.GetString(reader.outStructure.text_message)) ? Encoding.Default.GetString(reader.outStructure.text_message) : "Ошибка!",
+                                Receipts = new Receipts(new Receipt(reader.GetReceipt()))
+                            };
                             OnAction(new ActionEventArgs(lastTransaction.CustomerDisplayText, ActionType.DisplayCustomerMessage));
                         }
                     }
@@ -322,7 +335,7 @@ namespace MD_EPI_Ingenico
 
         public void ExecuteCommand(int commandId)
         {
-            Logger log = new Logger(this.ShortName, this.deviceID);
+            Logger log = new Logger(ShortName, deviceID);
             log.Write($"Execute Command({commandId.ToString()})");
             if (_activated == true)
             {
@@ -343,7 +356,7 @@ namespace MD_EPI_Ingenico
 
         public void ExecuteCommand(int commandId, object parameterValue)
         {
-            Logger log = new Logger(this.ShortName, this.deviceID);
+            Logger log = new Logger(ShortName, deviceID);
             log.Write($"ExecuteCommand() command {commandId.ToString()}, parameterValue: {parameterValue.ToString()}");
         }
 
@@ -357,10 +370,13 @@ namespace MD_EPI_Ingenico
 
         public TransactionResult GetLastTransaction()
         {
-            Logger log = new Logger(this.ShortName, this.deviceID);
+            Logger log = new Logger(ShortName, deviceID);
             log.Write("GetLastTransaction()");
             if (lastTransaction == null)
+            {
                 lastTransaction = new TransactionFailedResult(TransactionType.Debit, DateTime.Now);
+            }
+
             return lastTransaction;
         }
 
@@ -374,17 +390,17 @@ namespace MD_EPI_Ingenico
             return card;
         }
 
-        
+
         public ValidationResult ValidateCard()
         {
-            Logger log = new Logger(this.ShortName, this.deviceID);
+            Logger log = new Logger(ShortName, deviceID);
             log.Write("ValidateCard()");
             return new ValidationResult();
         }
 
         public ValidationResult ValidateCard(Card card)
         {
-            Logger log = new Logger(this.ShortName, this.deviceID);
+            Logger log = new Logger(ShortName, deviceID);
             log.Write("ValidateCard()");
             return new ValidationResult();
         }
@@ -399,22 +415,23 @@ namespace MD_EPI_Ingenico
         #region ICardHendling
         public void Activate(decimal amount)
         {
-            Logger log = new Logger(this.ShortName, this.deviceID);
-            //_transactionCancelled = false;
+            Logger log = new Logger(ShortName, deviceID);
             _activated = true;
-            log.Write($"Activate ({amount} Lei)");
+            log.Write(string.Format("Activate({0})", amount));
+            if (this.deviceType == DeviceType.PaymentCheckpoint)
+                OnCardInserted();
         }
 
         public void Deactivate()
         {
-            Logger log = new Logger(this.ShortName, this.deviceID);
+            Logger log = new Logger(ShortName, deviceID);
             log.Write("Deactivate()");
             _activated = false;
         }
 
         public void ReleaseCard()
         {
-            Logger log = new Logger(this.ShortName, this.deviceID);
+            Logger log = new Logger(ShortName, deviceID);
             log.Write("ReleaseCard()");
             OnCardRemoved();
             _activated = false;
@@ -425,20 +442,25 @@ namespace MD_EPI_Ingenico
         SettlementSettings ISettlement.Settings => throw new NotImplementedException();
         public SettlementResult Settlement(SettlementInput settlementData)
         {
-            bool settlementResult = false;
             SettlementResult settlResult = new SettlementResult();
-            int error = reader.CloseBatch();
-            int temp = 0;
-            if (error == 0)
+            try
             {
-                settlementResult = true;
+                int error = reader.CloseBatch();
+                if (error == 0)
+                {
+                }
+                else
+                {
+                    Logger log = new Logger(ShortName, deviceID);
+                    log.Write($"Settlement Error: {error}");
+                }
             }
-            else
+            catch (Exception e)
             {
-                Logger log = new Logger(this.ShortName, this.deviceID);
-                log.Write($"Settlement Error: {error}");
+                Logger log = new Logger(ShortName, deviceID);
+                log.Write($"Settlement Exception: {e.Message}");
             }
-            
+
             return new SettlementResult();
         }
         #endregion
@@ -461,79 +483,105 @@ namespace MD_EPI_Ingenico
         private void OnAction(ActionEventArgs args)
         {
             if (Action != null)
+            {
                 Action(this, args);
+            }
         }
 
         private void OnChoice(ChoiceEventArgs args)
         {
             if (Choice != null)
+            {
                 Choice(this, args);
+            }
         }
 
         private void OnConfirmation(ConfirmationEventArgs args)
         {
             if (Confirmation != null)
+            {
                 Confirmation(this, args);
+            }
         }
 
         private void OnDeliveryCheck(DeliveryCheckEventArgs args)
         {
             if (DeliveryCheck != null)
+            {
                 DeliveryCheck(this, args);
+            }
         }
 
         private void OnErrorOccurred(ErrorOccurredEventArgs args)
         {
             if (ErrorOccurred != null)
+            {
                 ErrorOccurred(this, args);
+            }
         }
 
         private void OnErrorCleared(ErrorClearedEventArgs args)
         {
             if (ErrorCleared != null)
+            {
                 ErrorCleared(this, args);
+            }
         }
 
         private void OnIrregularityDetected(IrregularityDetectedEventArgs args)
         {
             if (IrregularityDetected != null)
+            {
                 IrregularityDetected(this, args);
+            }
         }
 
         private void OnTerminalReadyChanged()
         {
             if (TerminalReadyChanged != null)
+            {
                 TerminalReadyChanged(this, new EventArgs());
+            }
         }
 
         private void OnJournalize(JournalizeEventArgs args)
         {
             if (Journalize != null)
+            {
                 Journalize(this, args);
+            }
         }
 
         private void OnTrace(TraceLevel level, string format, params object[] args)
         {
             if (Trace != null)
-                Trace(this, new TraceEventArgs(String.Format(CultureInfo.InvariantCulture, format, args), level));
+            {
+                Trace(this, new TraceEventArgs(string.Format(CultureInfo.InvariantCulture, format, args), level));
+            }
         }
 
         private void OnCardInserted()
         {
             if (CardInserted != null)
+            {
                 CardInserted(this, new EventArgs());
+            }
         }
 
         private void OnCardRemoved()
         {
             if (CardRemoved != null)
+            {
                 CardRemoved(this, new EventArgs());
+            }
         }
 
         private void OnCancelPressed()
         {
             if (CancelPressed != null)
+            {
                 CancelPressed(this, new EventArgs());
+            }
         }
         #endregion
 
@@ -560,7 +608,7 @@ namespace MD_EPI_Ingenico
             reader.CloseBatch();
         }
 
-        
+
         #endregion
     }
 }

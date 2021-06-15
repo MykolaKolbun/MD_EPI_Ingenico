@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MD_EPI_Ingenico
 {
@@ -99,30 +96,32 @@ namespace MD_EPI_Ingenico
         public int Init()
         {
             /* UserAuth structure initialization */
-            outStructure = new UseAuth();
-            outStructure.track2 = new byte[60];
-            outStructure.pan = new byte[20];
-            outStructure.expiry = new byte[5];
-            outStructure.pay_acc = new byte[20];
-            outStructure.additional_payment_data = new byte[80];
-            outStructure.amount = new byte[13];
-            outStructure.original_amount = new byte[13];
-            outStructure.currency = new byte[4];
-            outStructure.terminalID = new byte[9];
-            outStructure.rrn = new byte[13];
-            outStructure.authCode = new byte[9];
-            outStructure.responseCode = new byte[4];
-            outStructure.cardType = new byte[80];
-            outStructure.date = new byte[7];
-            outStructure.time = new byte[7];
-            outStructure.payment_data = new byte[50];
-            outStructure.data_to_print = new byte[50];
-            outStructure.home_operator = new byte[50];
-            outStructure.received_text_message = new byte[80];
-            outStructure.text_message = new byte[80];
-            outStructure.AID = new byte[80];
-            outStructure.ApplicationLabel = new byte[80];
-            outStructure.TVR = new byte[80];
+            outStructure = new UseAuth
+            {
+                track2 = new byte[60],
+                pan = new byte[20],
+                expiry = new byte[5],
+                pay_acc = new byte[20],
+                additional_payment_data = new byte[80],
+                amount = new byte[13],
+                original_amount = new byte[13],
+                currency = new byte[4],
+                terminalID = new byte[9],
+                rrn = new byte[13],
+                authCode = new byte[9],
+                responseCode = new byte[4],
+                cardType = new byte[80],
+                date = new byte[7],
+                time = new byte[7],
+                payment_data = new byte[50],
+                data_to_print = new byte[50],
+                home_operator = new byte[50],
+                received_text_message = new byte[80],
+                text_message = new byte[80],
+                AID = new byte[80],
+                ApplicationLabel = new byte[80],
+                TVR = new byte[80]
+            };
             outStructure.TVR.Initialize();
             outStructure.enc_data = new byte[64];
 

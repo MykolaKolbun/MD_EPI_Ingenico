@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MD_EPI_Ingenico
 {
@@ -20,7 +16,7 @@ namespace MD_EPI_Ingenico
             string compName = Environment.GetEnvironmentVariable("COMPUTERNAME");
             string srvName = compName.Split('-')[0] + "-01";
             srvName = ".local";
-            this.connectionString = string.Format(StringValue.SQLServerConnectionString, srvName);
+            connectionString = string.Format(StringValue.SQLServerConnectionString, srvName);
         }
 
         public void AddLinePurch(string devID, string trID, string tckNR, string rb, int amnt, string crdNR)
@@ -29,8 +25,10 @@ namespace MD_EPI_Ingenico
             {
                 conn = new SqlConnection(connectionString);
                 conn.Open();
-                cmd = new SqlCommand("AddTransaction", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
+                cmd = new SqlCommand("AddTransaction", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 cmd.Parameters.AddWithValue("@DeviceID", devID);
                 cmd.Parameters.AddWithValue("@TransactionType", 1);
                 cmd.Parameters.AddWithValue("@TransactionNR", trID);
@@ -59,8 +57,10 @@ namespace MD_EPI_Ingenico
             {
                 conn = new SqlConnection(connectionString);
                 conn.Open();
-                cmd = new SqlCommand("AddTransaction", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
+                cmd = new SqlCommand("AddTransaction", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 cmd.Parameters.AddWithValue("@DeviceID", devID);
                 cmd.Parameters.AddWithValue("@TransactionType", 2);
                 cmd.Parameters.AddWithValue("@TransactionNR", trID);
@@ -106,7 +106,9 @@ namespace MD_EPI_Ingenico
                 return isOnline;
             }
             else
+            {
                 return true;
+            }
         }
     }
 }

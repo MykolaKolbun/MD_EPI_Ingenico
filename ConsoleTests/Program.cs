@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleTests
 {
@@ -96,30 +93,32 @@ namespace ConsoleTests
         static void Main(string[] args)
         {
             /* UserAuth structure initialization */
-            UseAuth test = new UseAuth();
-            test.track2 = new byte[60];
-            test.pan = new byte[20];
-            test.expiry = new byte[5];
-            test.pay_acc = new byte[20];
-            test.additional_payment_data = new byte[80];
-            test.amount = new byte[13];
-            test.original_amount = new byte[13];
-            test.currency = new byte[4];
-            test.terminalID = new byte[9];
-            test.rrn = new byte[13];
-            test.authCode = new byte[9];
-            test.responseCode = new byte[4];
-            test.cardType = new byte[80];
-            test.date = new byte[7];
-            test.time = new byte[7];
-            test.payment_data = new byte[50];
-            test.data_to_print = new byte[50];
-            test.home_operator = new byte[50];
-            test.received_text_message = new byte[80];
-            test.text_message = new byte[80];
-            test.AID = new byte[80];
-            test.ApplicationLabel = new byte[80];
-            test.TVR = new byte[80];
+            UseAuth test = new UseAuth
+            {
+                track2 = new byte[60],
+                pan = new byte[20],
+                expiry = new byte[5],
+                pay_acc = new byte[20],
+                additional_payment_data = new byte[80],
+                amount = new byte[13],
+                original_amount = new byte[13],
+                currency = new byte[4],
+                terminalID = new byte[9],
+                rrn = new byte[13],
+                authCode = new byte[9],
+                responseCode = new byte[4],
+                cardType = new byte[80],
+                date = new byte[7],
+                time = new byte[7],
+                payment_data = new byte[50],
+                data_to_print = new byte[50],
+                home_operator = new byte[50],
+                received_text_message = new byte[80],
+                text_message = new byte[80],
+                AID = new byte[80],
+                ApplicationLabel = new byte[80],
+                TVR = new byte[80]
+            };
             test.TVR.Initialize();
             test.enc_data = new byte[64];
 
