@@ -134,9 +134,35 @@ namespace MD_EPI_Ingenico
 
         public int Purchase(double amount)
         {
+            outStructure = new UseAuth
+            {
+                track2 = new byte[60],
+                pan = new byte[20],
+                expiry = new byte[5],
+                pay_acc = new byte[20],
+                additional_payment_data = new byte[80],
+                amount = new byte[13],
+                original_amount = new byte[13],
+                currency = new byte[4],
+                terminalID = new byte[9],
+                rrn = new byte[13],
+                authCode = new byte[9],
+                responseCode = new byte[4],
+                cardType = new byte[80],
+                date = new byte[7],
+                time = new byte[7],
+                payment_data = new byte[50],
+                data_to_print = new byte[50],
+                home_operator = new byte[50],
+                received_text_message = new byte[80],
+                text_message = new byte[80],
+                AID = new byte[80],
+                ApplicationLabel = new byte[80],
+                TVR = new byte[80]
+            };
             outStructure.operType = 1;
-            byte[] amt = Encoding.ASCII.GetBytes($"{amount}");
-            byte[] cur = Encoding.ASCII.GetBytes("643");
+            byte[] amt = Encoding.Default.GetBytes($"{amount*100}");
+            byte[] cur = Encoding.Default.GetBytes("498");
             Array.Copy(amt, outStructure.amount, amt.Length);
             Array.Copy(cur, outStructure.currency, cur.Length);
 

@@ -227,7 +227,7 @@ namespace MD_EPI_Ingenico
                 {
                     try
                     {
-                        int error = reader.Purchase((int)(debitData.Amount * 100));
+                        int error = reader.Purchase((int)(debitData.Amount));
                         if (error == 0)
                         {
                             transactionResultDone = true;
@@ -363,7 +363,7 @@ namespace MD_EPI_Ingenico
         public CommandDefinitionCollection GetCommands()
         {
             CommandDefinitionCollection commandDefinitionCollection = new CommandDefinitionCollection();
-            CommandDefinition cardBtn = new CommandDefinition(1001, "Карта");
+            CommandDefinition cardBtn = new CommandDefinition(1001, "Card");
             commandDefinitionCollection.Add(cardBtn);
             return commandDefinitionCollection;
         }

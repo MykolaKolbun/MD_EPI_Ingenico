@@ -9,13 +9,12 @@ namespace MD_EPI_Ingenico
         string connectionString;
         SqlConnection conn;
         SqlCommand cmd;
-        bool demo = true;
+        bool demo = false;
         public SQLConnect()
         {
 
             string compName = Environment.GetEnvironmentVariable("COMPUTERNAME");
             string srvName = compName.Split('-')[0] + "-01";
-            srvName = ".local";
             connectionString = string.Format(StringValue.SQLServerConnectionString, srvName);
         }
 
